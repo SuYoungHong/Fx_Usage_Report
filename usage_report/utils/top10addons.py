@@ -67,6 +67,11 @@ def top_10_addons_on_date(data, date, topN, period=7, country_list=None):
         .distinct()\
         .groupBy('country', 'addon_id')\
         .agg(F.count('*').alias('number_of_users'), F.last('name').alias('name'))\
+        .select('*', F.row_number().over(Window.partitionBy('country', 'name')
+                                         .orderBy(desc('number_of_users'))
+                                         .rowsBetween(Window.unboundedPreceding, Window.currentRow))
+                                   .alias('same_addon_rank'))\
+        .filter(col('same_addon_rank') == 1)\
         .select('*', lit(date).alias('submission_date_s3'),
                 lit(begin).alias('start_date'),
                 F.row_number().over(Window.partitionBy('country')
