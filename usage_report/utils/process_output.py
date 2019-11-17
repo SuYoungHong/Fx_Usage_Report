@@ -18,7 +18,7 @@ FXHEALTH_METRICS = ['YAU',
                     'avg_intensity']
 
 WEBUSAGE_METRICS_1DIM = ['pct_addon',
-                         'pct_TP']
+                         'pct_TP', 'pct_ETP']
 
 WEBUSAGE_METRICS_2DIM = {'locale': ('locale', 'pct_on_locale'),
                          'top10addons': ('addon_name', 'pct_with_addon')}
