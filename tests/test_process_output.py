@@ -23,15 +23,15 @@ def main_summary_data():
 
     return (
         (("20180201", 100, 20, "DE", "client1", "57.0.1", 17060,
-          "Windows_NT", 10.0, a1, {0: 0, 1: 1}, 'en-US'),
+          "Windows_NT", 10.0, a1, {0: 0, 1: 1}, {3:0, 4:1}, 'en-US'),
          ("20180201", 100, 20, "DE", "client1", "57.0.1", 17060,
-          "Windows_NT", 10.0, a1, {}, "en-US"),
+          "Windows_NT", 10.0, a1, {}, {}, "en-US"),
          ("20180201", 100, 20, "DE", "client2", "58.0", 17563,
-          "Darwin", 10.0, a1, None, "DE")),  # 17563 -> 20180201
+          "Darwin", 10.0, a1, None, None, "DE")),  # 17563 -> 20180201
         ["submission_date_s3", "subsession_length", "active_ticks",
          "country", "client_id", "app_version", "profile_creation_date",
          "os", "os_version", "active_addons", "histogram_parent_tracking_protection_enabled",
-         "locale"]
+         "histogram_parent_cookie_behavior", "locale"]
     )
 
 
@@ -69,12 +69,14 @@ def test_processing_one_day(spark, main_summary_data):
     expected_webusage = {
         'DE': {"date": "2018-02-01",
                "metrics": {"pct_TP": 50.0,
+                           "pct_ETP": 50.0,
                            "pct_addon": 100.0,
                            "locale": {u"en-US": 50.0,
                                       u"DE": 50.0},
                            "top10addons": {u'SHA-1 deprecation staged rollout': 100.0}}},
         'All': {"date": "2018-02-01",
                 "metrics": {"pct_TP": 50.0,
+                            "pct_ETP": 50.0,
                             "pct_addon": 100.0,
                             "locale": {u"en-US": 50.0,
                                        u"DE": 50.0},
@@ -217,6 +219,7 @@ def test_update_history_webusage_with_history(spark, main_summary_data):
         'DE': [
                 {"date": "2018-01-01",
                  "metrics": {"pct_TP": 50.0,
+                             "pct_ETP": 50.0,
                              "pct_addon": 100.0,
                              "locale": {u"en-US": 50.0,
                                         u"DE": 50.0},
@@ -225,6 +228,7 @@ def test_update_history_webusage_with_history(spark, main_summary_data):
         'All': [
                 {"date": "2018-01-01",
                  "metrics": {"pct_TP": 50.0,
+                             "pct_ETP": 50.0,
                              "pct_addon": 100.0,
                              "locale": {u"en-US": 50.0,
                                         u"DE": 50.0},
@@ -238,12 +242,14 @@ def test_update_history_webusage_with_history(spark, main_summary_data):
         'DE': [
                {"date": "2018-01-01",
                 "metrics": {"pct_TP": 50.0,
+                            "pct_ETP": 50.0,
                             "pct_addon": 100.0,
                             "locale": {u"en-US": 50.0,
                                        u"DE": 50.0},
                             "top10addons": {u'SHA-1 deprecation staged rollout': 100.0}}},
                {"date": "2018-02-01",
                 "metrics": {"pct_TP": 50.0,
+                            "pct_ETP": 50.0,
                             "pct_addon": 100.0,
                             "locale": {u"en-US": 50.0,
                                        u"DE": 50.0},
@@ -252,12 +258,14 @@ def test_update_history_webusage_with_history(spark, main_summary_data):
         'All': [
                 {"date": "2018-01-01",
                  "metrics": {"pct_TP": 50.0,
+                             "pct_ETP": 50.0,
                              "pct_addon": 100.0,
                              "locale": {u"en-US": 50.0,
                                         u"DE": 50.0},
                              "top10addons": {u'SHA-1 deprecation staged rollout': 100.0}}},
                 {"date": "2018-02-01",
                  "metrics": {"pct_TP": 50.0,
+                             "pct_ETP": 50.0,
                              "pct_addon": 100.0,
                              "locale": {u"en-US": 50.0,
                                         u"DE": 50.0},
@@ -289,6 +297,7 @@ def test_update_history_webusage_without_history(spark, main_summary_data):
         'DE': [
                 {"date": "2018-02-01",
                  "metrics": {"pct_TP": 50.0,
+                             "pct_ETP": 50.0,
                              "pct_addon": 100.0,
                              "locale": {u"en-US": 50.0,
                                         u"DE": 50.0},
@@ -297,6 +306,7 @@ def test_update_history_webusage_without_history(spark, main_summary_data):
         'All': [
                 {"date": "2018-02-01",
                  "metrics": {"pct_TP": 50.0,
+                             "pct_ETP": 50.0,
                              "pct_addon": 100.0,
                              "locale": {u"en-US": 50.0,
                                         u"DE": 50.0},

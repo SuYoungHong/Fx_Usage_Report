@@ -29,25 +29,25 @@ def main_summary_data_multiple():
 
     return (
         (("20180201", 100, 20, "DE", "client1", "57.0.1", 17060,
-          "Windows_NT", 10.0, a1, {0: 0, 1: 1}, 'en-US'),
+          "Windows_NT", 10.0, a1, {0: 0, 1: 1}, {3: 0, 4: 1}, 'en-US'),
          ("20180201", 100, 20, "DE", "client1", "57.0.1", 17060,
-          "Windows_NT", 10.0, a1, {0: 0, 1: 1}, "en-US"),
+          "Windows_NT", 10.0, a1, {0: 0, 1: 1}, {3: 0, 4: 1}, "en-US"),
          ("20180201", 100, 20, "DE", "client2", "58.0", 17563,
-          "Darwin", 10.0, a1, None, "DE"),  # 17563 -> 20180201
+          "Darwin", 10.0, a1, None, None, "DE"),  # 17563 -> 20180201
          ("20180201", 100, 20, "MX", "client3", "58.0", 17563,
-          "Darwin", 10.0, a1, None, "en-US"),
+          "Darwin", 10.0, a1, None, None, "en-US"),
          ("20180201", 100, 20, "DE", "client4", "58.0", 17554,
-          "Darwin", 10.0, a1, None, "en-US"),
+          "Darwin", 10.0, a1, None, None, "en-US"),
          ("20180131", 100, 20, "DE", "client5", "58.0", 17363,
-          "Darwin", 10.0, a1, None, "DE"),
+          "Darwin", 10.0, a1, None, None, "DE"),
          ("20180101", 100, 20, "DE", "client5", "57.0", 17364,
-          "Darwin", 10.0, a1, None, "DE"),
+          "Darwin", 10.0, a1, None, None, "DE"),
          ("20180101", 100, 20, "DE", "client6", "57.0", 17364,
-          "Darwin", 10.0, a1, None, "DE")),
+          "Darwin", 10.0, a1, None, None, "DE")),
         ["submission_date_s3", "subsession_length", "active_ticks",
          "country", "client_id", "app_version", "profile_creation_date",
          "os", "os_version", "active_addons", "histogram_parent_tracking_protection_enabled",
-         "locale"]
+         "histogram_parent_cookie_behavior", "locale"]
     )
 
 
@@ -66,19 +66,19 @@ def main_summary_data_null_value():
 
     return (
         (("20180201", 100, 20, "DE", "client1", "", 17060,
-          "Windows_NT", 10.0, a1, {0: 0, 1: 1}, "en-US"),
+          "Windows_NT", 10.0, a1, {0: 0, 1: 1}, {3: 0, 4: 1}, "en-US"),
          ("20180201", 100, 20, "DE", "client1", "", 17060,
-          "Windows_NT", 10.0, a1, {0: 0, 1: 1}, "en-US"),
+          "Windows_NT", 10.0, a1, {0: 0, 1: 1}, {3: 0, 4: 1}, "en-US"),
          ("20180201", 100, 0, "DE", "client2", "", None,
-          "Darwin", 10.0, a1, None, "DE"),  # 17564 -> 20180201
+          "Darwin", 10.0, a1, None, None, "DE"),  # 17564 -> 20180201
          ("20180201", 100, 20, "DE", "client4", "", 17554,
-          "Darwin", 10.0, a1, None, "en-US"),
+          "Darwin", 10.0, a1, None, None, "en-US"),
          ("20180131", 100, 20, "DE", "client5", "", 17563,
-          "Darwin", 10.0, a1, None, "DE")),
+          "Darwin", 10.0, a1, None, None, "DE")),
         ["submission_date_s3", "subsession_length", "active_ticks",
          "country", "client_id", "app_version", "profile_creation_date",
          "os", "os_version", "active_addons", "histogram_parent_tracking_protection_enabled",
-         "locale"]
+         "histogram_parent_cookie_behavior", "locale"]
     )
 
 
@@ -103,6 +103,7 @@ def test_integration_multiple_countries_and_days_no_country_list(spark, main_sum
             "avg_intensity": 1.0,
             "pct_latest_version": 80.0,
             "pct_TP": 20.0,
+            "pct_ETP": 20.0,
             "MAU": 500,
             "YAU": 600,
             "pct_new_user": 40.0,
@@ -161,6 +162,7 @@ def test_integration_multiple_countries_and_days_country_list(spark, main_summar
             "avg_intensity": 1.0,
             "pct_latest_version": 80.0,
             "pct_TP": 20.0,
+            "pct_ETP": 20.0,
             "MAU": 500,
             "YAU": 600,
             "pct_new_user": 40.0,
@@ -173,6 +175,7 @@ def test_integration_multiple_countries_and_days_country_list(spark, main_summar
             "avg_intensity": 1.0,
             "pct_latest_version": 75.0,
             "pct_TP": 25.0,
+            "pct_ETP": 25.0,
             "MAU": 400,
             "YAU": 500,
             "pct_new_user": 25.0,
@@ -246,6 +249,7 @@ def test_integration_missing_fields_no_country_list(spark, main_summary_data_nul
             "avg_intensity": 0.75,
             "pct_latest_version": 0.0,
             "pct_TP": 25.0,
+            "pct_ETP": 25.0,
             "MAU": 400,
             "YAU": 400,
             "pct_new_user": 25.0,
@@ -299,6 +303,7 @@ def test_integration_missing_fields_country_list(spark, main_summary_data_null_v
             "avg_intensity": 0.75,
             "pct_latest_version": 0.0,
             "pct_TP": 25.0,
+            "pct_ETP": 25.0,
             "MAU": 400,
             "YAU": 400,
             "pct_new_user": 25.0,
@@ -311,6 +316,7 @@ def test_integration_missing_fields_country_list(spark, main_summary_data_null_v
             "avg_intensity": 0.75,
             "pct_latest_version": 0.0,
             "pct_TP": 25.0,
+            "pct_ETP": 25.0,
             "MAU": 400,
             "YAU": 400,
             "pct_new_user": 25.0,

@@ -12,7 +12,8 @@ from usage_report.utils.pct_addon import get_addon
 from usage_report.utils.localedistribution import locale_on_date
 from usage_report.usage_report import agg_usage, get_spark
 from pyspark.sql import Row
-from usage_report.utils.trackingprotection import pct_tracking_protection
+from usage_report.utils.trackingprotection import pct_tracking_protection,
+                                                  pct_etp
 
 
 #  Makes utils available
@@ -38,15 +39,15 @@ def main_summary_data():
 
     return (
         (("20180201", 100, 20, "DE", "client1", "57.0.1", 17060,
-          "Windows_NT", 10.0, a1, {0: 0, 1: 1}, 'en-US'),
+          "Windows_NT", 10.0, a1, {0: 0, 1: 1}, {3: 0, 4: 1}, 'en-US'),
          ("20180201", 100, 20, "DE", "client1", "57.0.1", 17060,
-          "Windows_NT", 10.0, a1, {}, "en-US"),
+          "Windows_NT", 10.0, a1, {}, {}, "en-US"),
          ("20180201", 100, 20, "DE", "client2", "58.0", 17563,
-          "Darwin", 10.0, a2, None, "DE")),  # 17563 -> 20180201
+          "Darwin", 10.0, a2, None, None, "DE")),  # 17563 -> 20180201
         ["submission_date_s3", "subsession_length", "active_ticks",
          "country", "client_id", "app_version", "profile_creation_date",
          "os", "os_version", "active_addons", "histogram_parent_tracking_protection_enabled",
-         "locale"]
+         "histogram_parent_cookie_behavior", "locale"]
     )
 
 
@@ -446,6 +447,42 @@ def test_pct_tracking_protection_country_list(spark, main_summary_data):
     is_same(spark, with_country_list, expected)
 
 
+def test_pct_etp_no_country_list(spark, main_summary_data):
+    main_summary = spark.createDataFrame(*main_summary_data)
+    without_country_list = pct_etp(main_summary, '20180201')
+
+    expected = [
+        {
+            "submission_date_s3": "20180201",
+            "country": "All",
+            "pct_ETP": 50.0
+        }
+    ]
+
+    is_same(spark, without_country_list, expected)
+
+
+def test_pct_etp_country_list(spark, main_summary_data):
+    main_summary = spark.createDataFrame(*main_summary_data)
+    with_country_list = pct_etp(main_summary,
+                                                '20180201',
+                                                country_list=["DE"])
+    expected = [
+        {
+            "submission_date_s3": "20180201",
+            "country": "All",
+            "pct_ETP": 50.0
+        },
+        {
+            "submission_date_s3": "20180201",
+            "country": "DE",
+            "pct_ETP": 50.0
+        }
+    ]
+
+    is_same(spark, with_country_list, expected)    
+
+
 def test_locale_no_country_list(spark, main_summary_data):
     main_summary = spark.createDataFrame(*main_summary_data)
     without_country_list = locale_on_date(main_summary, '20180201', 4)
@@ -515,6 +552,7 @@ def test_integration_no_country_list(spark, main_summary_data):
             "avg_intensity": 1.0,
             "pct_latest_version": 50.0,
             "pct_TP": 50.0,
+            "pct_ETP": 50.0,
             "MAU": 200,
             "YAU": 200,
             "pct_new_user": 50.0,
@@ -566,6 +604,7 @@ def test_integration_country_list(spark, main_summary_data):
             "avg_intensity": 1.0,
             "pct_latest_version": 50.0,
             "pct_TP": 50.0,
+            "pct_ETP": 50.0,
             "MAU": 200,
             "YAU": 200,
             "pct_new_user": 50.0,
@@ -578,6 +617,7 @@ def test_integration_country_list(spark, main_summary_data):
             "avg_intensity": 1.0,
             "pct_latest_version": 50.0,
             "pct_TP": 50.0,
+            "pct_ETP": 50.0,
             "MAU": 200,
             "YAU": 200,
             "pct_new_user": 50.0,
