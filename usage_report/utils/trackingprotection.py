@@ -62,6 +62,7 @@ def pct_tracking_protection(data,
                          F.coalesce('pct_TP', F.lit(0)).alias('pct_TP'))
     return join_df
 
+
 def pct_etp(data,
             date,
             period=7,

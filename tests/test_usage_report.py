@@ -465,8 +465,8 @@ def test_pct_etp_no_country_list(spark, main_summary_data):
 def test_pct_etp_country_list(spark, main_summary_data):
     main_summary = spark.createDataFrame(*main_summary_data)
     with_country_list = pct_etp(main_summary,
-                                                '20180201',
-                                                country_list=["DE"])
+                                '20180201',
+                                country_list=["DE"])
     expected = [
         {
             "submission_date_s3": "20180201",
@@ -480,7 +480,7 @@ def test_pct_etp_country_list(spark, main_summary_data):
         }
     ]
 
-    is_same(spark, with_country_list, expected)    
+    is_same(spark, with_country_list, expected)
 
 
 def test_locale_no_country_list(spark, main_summary_data):
