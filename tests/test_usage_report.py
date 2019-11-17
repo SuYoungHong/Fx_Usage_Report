@@ -12,8 +12,8 @@ from usage_report.utils.pct_addon import get_addon
 from usage_report.utils.localedistribution import locale_on_date
 from usage_report.usage_report import agg_usage, get_spark
 from pyspark.sql import Row
-from usage_report.utils.trackingprotection import pct_tracking_protection,
-                                                  pct_etp
+from usage_report.utils.trackingprotection import (pct_tracking_protection,
+                                                   pct_etp)
 
 
 #  Makes utils available
