@@ -13,7 +13,7 @@ from utils.pct_latest_version import pct_new_version
 from utils.process_output import all_metrics_per_day, rename_keys, update_history
 from utils.s3_utils import read_from_s3, write_to_s3
 from utils.top10addons import top_10_addons_on_date
-from utils.trackingprotection import pct_tracking_protection
+from utils.trackingprotection import pct_tracking_protection, pct_etp
 
 # country names and mappings
 # this list is formulated from
@@ -121,6 +121,11 @@ def agg_usage(data, **kwargs):
                                            period=period,
                                            country_list=country_list)
 
+    etp = pct_etp(data,
+                  date,
+                  period=period,
+                  country_list=country_list)
+
     on = ['submission_date_s3', 'country']
     usage = (avg_daily_session_length
              .join(avg_daily_intensity, on=on)
@@ -129,7 +134,8 @@ def agg_usage(data, **kwargs):
              .join(yau, on=on)
              .join(new_user_counts, on=on)
              .join(has_addon, on=on)
-             .join(tracking_pro, on=on))
+             .join(tracking_pro, on=on)
+             .join(etp, on=on))
 
     return usage, locales, top10addon
 
