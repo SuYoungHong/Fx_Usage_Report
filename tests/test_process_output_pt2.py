@@ -69,7 +69,7 @@ def test_pct_etp_country_list_pt2(spark, main_summary_data):
         {
             "submission_date_s3": "20180201",
             "country": "All",
-            "pct_ETP": 50.0
+            "pct_ETP": 25.0
         },
         {
             "submission_date_s3": "20180201",
