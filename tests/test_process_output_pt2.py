@@ -1,7 +1,7 @@
 
 import pytest
 from helpers.utils import is_same
-from usage_report.usage_report import agg_usage, get_spark
+from usage_report.usage_report import get_spark
 from pyspark.sql import Row
 from usage_report.utils.trackingprotection import pct_etp
 
